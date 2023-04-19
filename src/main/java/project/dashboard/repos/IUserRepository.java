@@ -1,6 +1,6 @@
-package repos;
+package project.dashboard.repos;
 
-import Models.User;
+import project.dashboard.models.User;
 import org.springframework.data.jpa.repository.JpaRepository;
 
 public interface IUserRepository extends JpaRepository<User, Long> {
