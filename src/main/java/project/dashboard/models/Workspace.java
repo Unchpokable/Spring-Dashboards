@@ -20,7 +20,11 @@ public class Workspace {
 
     @ManyToOne
     @JoinColumn(name = "members")
-    private List<User> m_members;
+    private List<User> m_workspace_members;
+
+    @OneToOne(cascade = CascadeType.ALL)
+    @JoinColumn(name = "owner_id", referencedColumnName = "id")
+    private Long m_owner;
 
     public Long getId() { return id; }
 
@@ -28,7 +32,9 @@ public class Workspace {
 
     public List<Dashboard> getDashboards() { return m_dashboards; }
 
-    public List<User> getMembers() { return m_members; }
+    public List<User> getMembers() { return m_workspace_members; }
+
+    public Long getOwner() { return m_owner; }
 
     public void setId(Long value) { id = value; }
 
@@ -36,5 +42,13 @@ public class Workspace {
     {
         ArgumentGuard.AssertStringNotNullOrEmpty(value);
         m_title = value;
+    }
+
+    public void setM_dashboards(List<Dashboard> m_dashboards) {
+        this.m_dashboards = m_dashboards;
+    }
+
+    public void setM_workspace_members(List<User> m_workspace_members) {
+        this.m_workspace_members = m_workspace_members;
     }
 }
