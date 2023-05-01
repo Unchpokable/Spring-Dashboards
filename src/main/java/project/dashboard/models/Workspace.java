@@ -2,53 +2,48 @@ package project.dashboard.models;
 
 import jakarta.persistence.*;
 import project.dashboard.internal.ArgumentGuard;
+import project.dashboard.models.Dashboard;
 
 import java.util.List;
 
 @Entity
 @Table(name = "workspaces")
 public class Workspace {
+
     @Id
-    @GeneratedValue(strategy = GenerationType.SEQUENCE)
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    @Column(name = "title")
-    private String m_title;
+    @Column(nullable = false)
+    private String name;
 
-    @OneToMany(mappedBy = "m_workspace_id")
-    private List<Dashboard> m_dashboards;
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "user_id", nullable = false)
+    private User user;
 
-    @ManyToOne
-    @JoinColumn(name = "members")
-    private List<User> m_workspace_members;
+    @OneToMany(mappedBy = "workspace", cascade = CascadeType.ALL)
+    private List<Dashboard> boards;
 
-    @OneToOne(cascade = CascadeType.ALL)
-    @JoinColumn(name = "owner_id", referencedColumnName = "id")
-    private Long m_owner;
+    public String getName() {
+        return name;
+    }
 
-    public Long getId() { return id; }
-
-    public String getTitle() { return m_title; }
-
-    public List<Dashboard> getDashboards() { return m_dashboards; }
-
-    public List<User> getMembers() { return m_workspace_members; }
-
-    public Long getOwner() { return m_owner; }
-
-    public void setId(Long value) { id = value; }
-
-    public void setTitle(String value) throws IllegalArgumentException
-    {
+    public void setName(String value) {
         ArgumentGuard.AssertStringNotNullOrEmpty(value);
-        m_title = value;
+        name = value;
     }
 
-    public void setM_dashboards(List<Dashboard> m_dashboards) {
-        this.m_dashboards = m_dashboards;
+    public User getUser() {
+        return user;
     }
 
-    public void setM_workspace_members(List<User> m_workspace_members) {
-        this.m_workspace_members = m_workspace_members;
+    public void setUser(User value) {
+        user = value;
     }
+
+    public List<Dashboard> getBoards() {
+        return boards;
+    }
+
+    // Конструкторы, геттеры и сеттеры
 }

@@ -1,80 +1,102 @@
 package project.dashboard.models;
 
 import jakarta.persistence.*;
-import org.springframework.security.core.parameters.P;
 import project.dashboard.internal.ArgumentGuard;
+import project.dashboard.internal.FileManager;
 
+import java.io.IOException;
 import java.util.List;
-import java.util.Objects;
 
 @Entity
 @Table(name = "users")
 public class User {
-    @Id
-    @GeneratedValue(strategy = GenerationType.SEQUENCE)
-    @OneToOne(mappedBy = "owner_id")
-    private Long m_id;
 
-    @Column(name = "username")
-    private String m_username;
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    private Long id;
+
+    @Column(name = "nickname")
+    private String nickname;
+
+    @Column(nullable = false, unique = true)
+    private String email;
+
+    @OneToMany(mappedBy = "user", cascade = CascadeType.ALL)
+    private List<Workspace> workspaces;
 
     @Column(name = "first_name")
-    private String m_firstName;
+    private String firstName;
 
     @Column(name = "last_name")
-    private String m_lastName;
+    private String lastName;
 
-    @OneToMany(mappedBy = "m_workspace_members")
-    private List<Workspace> m_workspaces;
+    @Column(name = "additional_info")
+    private String additionalInfo;
 
-    @OneToMany(mappedBy = "m_dashboard_members")
-    private List<Dashboard> m_dashboard;
+    @Lob
+    @Column(name = "avatar")
+    private byte[] avatar;
 
-    public void setUsername(String value) throws IllegalArgumentException
-    {
+    // Конструкторы, геттеры и сеттеры
+    public User() {}
+
+    public String getNickname() {
+        return nickname;
+    }
+
+    public String getEmail() {
+        return email;
+    }
+
+    public String getFirstName() {
+        return firstName;
+    }
+
+    public String getLastName() {
+        return lastName;
+    }
+
+    public String getAdditionalInfo() {
+        return additionalInfo;
+    }
+
+    public byte[] getAvatar() {
+        return avatar;
+    }
+
+    public List<Workspace> getWorkspaces() {
+        return workspaces;
+    }
+
+        public void setNickname(String value) throws IllegalArgumentException {
         ArgumentGuard.AssertStringNotNullOrEmpty(value);
-        m_username = value;
+        nickname = value;
     }
 
-    public void setFirstName(String value) throws IllegalArgumentException
-    {
+    public void setEmail(String value) throws IllegalArgumentException {
+        ArgumentGuard.AssertEmailIsValid(value);
+        email = value;
+    }
+
+    public void setFirstName(String value) throws IllegalArgumentException {
         ArgumentGuard.AssertStringNotNullOrEmpty(value);
-        m_firstName = value;
+        firstName = value;
     }
 
-    public void setLastName(String value) throws IllegalArgumentException
-    {
+    public void setLastName(String value) throws IllegalArgumentException {
         ArgumentGuard.AssertStringNotNullOrEmpty(value);
-        m_lastName = value;
+        lastName = value;
     }
 
-    public Long getId() { return m_id; }
-
-    public String getUsername() { return m_username; }
-
-    public String getFirstName() { return m_firstName; }
-
-    public String getLastName() { return m_lastName; }
-
-    public List<Workspace> getWorkspaces() { return m_workspaces; }
-
-    public List<Workspace> getOwnedWorkspaces()
-    {
-        return m_workspaces
-                .stream()
-                .filter(ws -> Objects.equals(ws.getOwner(), m_id))
-                .toList();
+    public void setAdditionalInfo(String value) throws IllegalArgumentException {
+        ArgumentGuard.AssertStringNotNullOrEmpty(value);
+        additionalInfo = value;
     }
 
-    public void setM_workspaces(List<Workspace> m_workspaces) {
-        this.m_workspaces = m_workspaces;
-    }
-
-    public List<Dashboard> getM_dashboard() {
-        return m_dashboard;
-    }
-
-    public void setM_dashboard(List<Dashboard> m_dashboard) {
-        this.m_dashboard = m_dashboard;
+    public void setAvatar(String filePath) throws IllegalArgumentException {
+        ArgumentGuard.AssertStringNotNullOrEmpty(filePath);
+        try{
+            avatar = FileManager.loadFileByteArray(filePath);
+        } catch (IOException ex) { }
     }
 }
