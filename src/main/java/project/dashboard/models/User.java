@@ -87,7 +87,7 @@ public class User {
     public Set<Role> getRoles() { return roles; }
 
     public void setNickname(String value) throws IllegalArgumentException {
-        ArgumentGuard.AssertStringNotNullOrEmpty(value);
+        ArgumentGuard.assertStringNotNullOrEmpty(value);
         nickname = value;
     }
 
