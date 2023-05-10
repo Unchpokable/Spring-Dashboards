@@ -2,7 +2,6 @@ package project.dashboard.models;
 
 import jakarta.persistence.*;
 import project.dashboard.internal.ArgumentGuard;
-import project.dashboard.models.Dashboard;
 
 import java.util.List;
 
@@ -24,12 +23,14 @@ public class Workspace {
     @OneToMany(mappedBy = "workspace", cascade = CascadeType.ALL)
     private List<Dashboard> boards;
 
+    public Long getId() { return id; }
+
     public String getName() {
         return name;
     }
 
     public void setName(String value) {
-        ArgumentGuard.AssertStringNotNullOrEmpty(value);
+        ArgumentGuard.assertStringNotNullOrEmpty(value);
         name = value;
     }
 

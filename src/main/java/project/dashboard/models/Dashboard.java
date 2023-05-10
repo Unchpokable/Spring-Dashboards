@@ -34,6 +34,8 @@ public class Dashboard {
     @OneToMany(mappedBy = "board", cascade = CascadeType.ALL)
     private List<TaskCard> taskCards;
 
+    public Long getId() { return id; }
+
     public String getName() {
         return name;
     }

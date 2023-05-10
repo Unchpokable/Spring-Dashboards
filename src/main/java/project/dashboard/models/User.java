@@ -52,6 +52,8 @@ public class User {
     // Конструкторы, геттеры и сеттеры
     public User() {}
 
+    public Long getId() { return id; }
+
     public String getNickname() {
         return nickname;
     }
@@ -85,32 +87,32 @@ public class User {
     public Set<Role> getRoles() { return roles; }
 
     public void setNickname(String value) throws IllegalArgumentException {
-    ArgumentGuard.AssertStringNotNullOrEmpty(value);
-    nickname = value;
+        ArgumentGuard.AssertStringNotNullOrEmpty(value);
+        nickname = value;
     }
 
     public void setEmail(String value) throws IllegalArgumentException {
-        ArgumentGuard.AssertEmailIsValid(value);
+        ArgumentGuard.assertEmailIsValid(value);
         email = value;
     }
 
     public void setFirstName(String value) throws IllegalArgumentException {
-        ArgumentGuard.AssertStringNotNullOrEmpty(value);
+        ArgumentGuard.assertStringNotNullOrEmpty(value);
         firstName = value;
     }
 
     public void setLastName(String value) throws IllegalArgumentException {
-        ArgumentGuard.AssertStringNotNullOrEmpty(value);
+        ArgumentGuard.assertStringNotNullOrEmpty(value);
         lastName = value;
     }
 
     public void setAdditionalInfo(String value) throws IllegalArgumentException {
-        ArgumentGuard.AssertStringNotNullOrEmpty(value);
+        ArgumentGuard.assertStringNotNullOrEmpty(value);
         additionalInfo = value;
     }
 
     public void setAvatar(String filePath) throws IllegalArgumentException {
-        ArgumentGuard.AssertStringNotNullOrEmpty(filePath);
+        ArgumentGuard.assertStringNotNullOrEmpty(filePath);
         try{
             avatar = FileManager.loadFileByteArray(filePath);
         } catch (IOException ex) { }
