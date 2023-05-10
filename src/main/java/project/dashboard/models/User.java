@@ -5,7 +5,9 @@ import project.dashboard.internal.ArgumentGuard;
 import project.dashboard.internal.FileManager;
 
 import java.io.IOException;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 
 @Entity
 @Table(name = "users")
@@ -13,6 +15,7 @@ public class User {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @Column(name = "user_id")
     private Long id;
 
     @Column(name = "nickname")
@@ -30,12 +33,21 @@ public class User {
     @Column(name = "last_name")
     private String lastName;
 
+    @Column(name = "password")
+    private String password;
+
     @Column(name = "additional_info")
     private String additionalInfo;
 
     @Lob
     @Column(name = "avatar")
     private byte[] avatar;
+
+    @ElementCollection(targetClass = Role.class, fetch = FetchType.EAGER)
+    @CollectionTable(name = "user_role", joinColumns = @JoinColumn(name = "user_id"))
+    @Enumerated(EnumType.STRING)
+    private Set<Role> roles = new HashSet<>();
+
 
     // Конструкторы, геттеры и сеттеры
     public User() {}
@@ -58,6 +70,8 @@ public class User {
         return lastName;
     }
 
+    public String getPassword() { return password; }
+
     public String getAdditionalInfo() {
         return additionalInfo;
     }
@@ -70,8 +84,10 @@ public class User {
         return workspaces;
     }
 
-        public void setNickname(String value) throws IllegalArgumentException {
-        ArgumentGuard.assertStringNotNullOrEmpty(value);
+    public Set<Role> getRoles() { return roles; }
+
+    public void setNickname(String value) throws IllegalArgumentException {
+        ArgumentGuard.AssertStringNotNullOrEmpty(value);
         nickname = value;
     }
 
@@ -101,4 +117,10 @@ public class User {
             avatar = FileManager.loadFileByteArray(filePath);
         } catch (IOException ex) { }
     }
+
+    public void setRoles(Set<Role> value) {
+        roles = value;
+    }
+
+    public void setPassword(String value) { password = value;}
 }
