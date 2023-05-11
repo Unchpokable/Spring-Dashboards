@@ -47,6 +47,22 @@ public class WorkspaceService {
     }
 
     @Transactional
+    public boolean createWorkspace(Long ownerId, String title) {
+        var userCandidate = userRepository.findById(ownerId);
+        if (userCandidate.isEmpty())
+            return false;
+
+        var user = userCandidate.get();
+
+        try {
+            createWorkspace(title, user);
+        } catch (IllegalArgumentException ex) {
+            return false;
+        }
+        return true;
+    }
+
+    @Transactional
     public void removeWorkspace(Workspace workspace) throws IllegalArgumentException {
         ArgumentGuard.assertNotNull(workspace);
         if (workspaceRepository.existsById(workspace.getId()))
@@ -74,13 +90,21 @@ public class WorkspaceService {
     }
 
     @Transactional
-    public boolean addWorkspaceDashboard(Long wsId, Dashboard dashboard) throws IllegalArgumentException {
+    public boolean addWorkspaceDashboard(Long wsId, String title) {
         var wsCandidate = workspaceRepository.findById(wsId);
         if (wsCandidate.isEmpty())
             return false;
 
         var ws = wsCandidate.get();
-        addWorkspaceDashboard(ws, dashboard);
+        var board = new Dashboard();
+        board.setWorkspace(ws);
+        board.setOwner(ws.getUser());
+        board.setName(title);
+        try {
+            addWorkspaceDashboard(ws, board);
+        } catch (IllegalArgumentException ex) {
+            return false;
+        }
         return true;
     }
 

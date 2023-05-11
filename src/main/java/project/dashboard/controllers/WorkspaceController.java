@@ -27,8 +27,10 @@ public class WorkspaceController {
     }
 
     @PostMapping("/{userId}/create")
-    public ResponseEntity<?> createWorkspace(@PathVariable Long userId, @RequestBody Workspace workspace) {
-        return ResponseEntity.notFound().build();
+    public ResponseEntity<?> createWorkspace(@PathVariable Long userId, @RequestBody String workspace) {
+        if (workspaceService.createWorkspace(userId, workspace))
+            return ResponseEntity.ok().build();
+        return ResponseEntity.badRequest().build();
     }
 
     @GetMapping("/{userId}/list")
@@ -50,14 +52,14 @@ public class WorkspaceController {
     public ResponseEntity<?> editWorkspace(@PathVariable Long workspaceId, @RequestParam("name") String newName) {
 
         //TODO: Authentication check here
-        if (!workspaceService.renameWorkspace(workspaceId, newName)){
-            return ResponseEntity.badRequest().build();
+        if (!workspaceService.renameWorkspace(workspaceId, newName)) {
+            return ResponseEntity.status(HttpStatus.NO_CONTENT).build();
         }
         return ResponseEntity.ok().build();
     }
 
     @PostMapping("/{workspaceId}/addDashboard")
-    public ResponseEntity<?> addWorkspaceDashboard(@PathVariable Long workspaceId, @RequestBody Dashboard dashboard) {
+    public ResponseEntity<?> addWorkspaceDashboard(@PathVariable Long workspaceId, @RequestBody String dashboard) {
         //TODO: Authentication check here
         if (!workspaceService.addWorkspaceDashboard(workspaceId, dashboard))
             return ResponseEntity.badRequest().build();
