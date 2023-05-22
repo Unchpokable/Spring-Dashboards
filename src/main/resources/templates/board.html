@@ -1,0 +1,69 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Task Board</title>
+  <link rel="stylesheet" href="/static/css/dashboard.css">
+</head>
+<body>
+<header>
+  <h1 th:text="${boardName}">Task Board</h1>
+</header>
+
+<div class="board">
+  <div class="column">
+    <h2>Planned</h2>
+    <div class="card" th:each="task : ${plannedTasks}" draggable="true" ondragstart="drag(event)">
+      <h3 th:text="${task.title}">Task 1</h3>
+      <p th:text="${task.description}">Lorem ipsum dolor sit amet, consectetur adipiscing elit.</p>
+      <span class="user" th:text="${task.user}">John Doe</span>
+    </div>
+  </div>
+
+  <div class="column">
+    <h2>In Progress</h2>
+    <div class="card" th:each="task : ${inProgressTasks}" draggable="true" ondragstart="drag(event)">
+      <h3 th:text="${task.title}">Task 3</h3>
+      <p th:text="${task.description}">Vivamus sagittis lacus vel augue laoreet rutrum faucibus dolor auctor.</p>
+      <span class="user" th:text="${task.user}">John Doe</span>
+    </div>
+  </div>
+
+  <div class="column">
+    <h2>Some Problems</h2>
+    <div class="card" th:each="task : ${problemTasks}" draggable="true" ondragstart="drag(event)">
+      <h3 th:text="${task.title}">Task 4</h3>
+      <p th:text="${task.description}">Maecenas faucibus mollis interdum.</p>
+      <span class="user" th:text="${task.user}">Jane Smith</span>
+    </div>
+  </div>
+
+  <div class="column">
+    <h2>Done</h2>
+    <div class="card" th:each="task : ${doneTasks}" draggable="true" ondragstart="drag(event)">
+      <h3 th:text="${task.title}">Task 6</h3>
+      <p th:text="${task.description}">Donec id elit non mi porta gravida at eget metus.</p>
+      <span class="user" th:text="${task.user}">Jane Smith</span>
+    </div>
+  </div>
+</div>
+
+<script>
+    function drag(event) {
+      event.dataTransfer.setData("text", event.target.id);
+    }
+
+    function allowDrop(event) {
+      event.preventDefault();
+    }
+
+    function drop(event) {
+      event.preventDefault();
+      var data = event.dataTransfer.getData("text");
+      event.target.appendChild(document.getElementById(data));
+    }
+  </script>
+
+</body>
+</html>
