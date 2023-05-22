@@ -21,7 +21,7 @@ public class DashboardService {
     private IWorkspaceRepository workspaceRepository;
 
     @Transactional
-    public void createDashboard(Workspace root, String title) {
+    public Dashboard createDashboard(Workspace root, String title) {
         ArgumentGuard.assertNotNull(root);
         ArgumentGuard.assertStringNotNullOrEmpty(title);
 
@@ -30,18 +30,18 @@ public class DashboardService {
         dashboard.setWorkspace(root);
         dashboard.setOwner(root.getUser());
         dashboardRepository.save(dashboard);
+        return dashboard;
     }
 
     @Transactional
-    public boolean createDashboard(Long workspaceId, String title) {
+    public Dashboard createDashboard(Long workspaceId, String title) {
         var workspaceRootOpt = workspaceRepository.findById(workspaceId);
 
         if (workspaceRootOpt.isEmpty())
-            return false;
+            return null;
 
         var workspaceRoot = workspaceRootOpt.get();
-        createDashboard(workspaceRoot, title);
-        return true;
+        return createDashboard(workspaceRoot, title);
     }
 
     @Transactional

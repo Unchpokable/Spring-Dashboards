@@ -10,7 +10,6 @@ import project.dashboard.services.UserService;
 
 @Controller
 public class AuthController {
-
     private final UserService userService;
 
     @Autowired

@@ -48,4 +48,9 @@ public class UserService implements UserDetailsService {
         user.setRoles(Collections.singleton(Role.USER));
         userRepository.save(user);
     }
+
+    public User getUser(Long id) {
+        var candidate = userRepository.findById(id);
+        return candidate.orElse(null);
+    }
 }
