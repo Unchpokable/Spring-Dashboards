@@ -156,4 +156,12 @@ public class WorkspaceService {
 
         return Objects.equals(ws.getUser().getId(), userId);
     }
+
+    public List<Dashboard> getWorkspaceDashboards(Long workspaceId) {
+        var workspace =  workspaceRepository.findById(workspaceId);
+        if (workspace.isEmpty()) {
+            return null;
+        }
+        return workspace.get().getBoards();
+    }
 }
