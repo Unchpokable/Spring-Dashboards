@@ -1,0 +1,28 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>My Workspaces</title>
+    <link rel="stylesheet" href="/static/css/workspacepage.css">
+</head>
+<body>
+<div class="logout">
+    <span><span th:text="${username}"></span></span>
+    <a href="/logout" class="logout">Logout</a>
+</div>
+
+<div class="workspace_container">
+    <h1>My Workspaces</h1>
+    <span> You have an <span th:text="${workspaceBoardsCount}"></span> owned workspaces:</span>
+    <ul>
+        <li th:each="workspace : ${workspaces}">
+            <a href="#" th:text="${workspace.getName()}" th:attr="data-workspace-id=${workspace.getId()}"></a>
+        </li>
+    </ul>
+</div>
+
+<script src="/static/js/workspace.js">
+</script>
+</body>
+</html>

@@ -3,10 +3,10 @@ body {
     color: #fff;
     font-family: 'Roboto', sans-serif;
     display: flex;
-    justify-content: center;
-    align-items: center;
+    justify-content: top-left;
+    align-items: top-left;
     height: 100vh;
-    text-align: center;
+    text-align: top-left;
 }
 
 h1 {
@@ -18,7 +18,7 @@ h1 {
 
 .workspace_container {
     width: 100%;
-    margin: 0 auto;
+    margin-left: 50px;
 }
 
 .container {
@@ -49,8 +49,7 @@ textarea {
     margin-top: 5px;
 }
 
-input[type="submit"]
-{
+input[type="submit"] {
     display: inline-block;
     padding: 10px;
     border: none;
@@ -117,7 +116,7 @@ button:hover {
 }
 
 a {
-    color: #2196f3;
+    color:
     text-decoration: none;
     transition: color 0.3s ease;
 }
@@ -127,7 +126,16 @@ a:hover {
 }
 
 .logout {
-    margin-left: auto;
+    display: block;
+    width: 115px;
+    height: 25px;
+    background: #4E9CAF;
+    padding: 10px;
+    text-align: center;
+    border-radius: 5px;
+    color: white;
+    font-weight: bold;
+    line-height: 25px;
 }
 
 ul {
@@ -144,8 +152,9 @@ li a {
     display: block;
     color: #fff;
     transition: background-color 0.3s ease;
-    padding: 50px;
-    margin:10px;
+    padding: 10px;
+    margin-top: 10px;
+    margin-right: 50px;
     border-radius: 4px;
 }
 
