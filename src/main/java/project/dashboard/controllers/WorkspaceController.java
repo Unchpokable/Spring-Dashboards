@@ -15,12 +15,14 @@ import project.dashboard.services.DashboardService;
 import project.dashboard.services.UserService;
 import project.dashboard.services.WorkspaceService;
 
+import java.security.Principal;
 import java.util.List;
 
 @Controller
 @RequestMapping("/api/workspaces")
 public class WorkspaceController {
     private final WorkspaceService workspaceService;
+
 
 
     @Autowired
@@ -102,8 +104,13 @@ public class WorkspaceController {
         return workspaceService.isUserOwner(user.getId(), workspaceId);
     }
 
-    @GetMapping("")
-    public List<Dashboard> getWorkspaceDashboards(Long workspaceId) {
-        return workspaceService.getWorkspaceDashboards(workspaceId);
+    @GetMapping("/dashboards")
+    public String getWorkspaceDashboards(Principal principal, Model model) {
+        String nickname = principal.getName();
+
+        List<Workspace> workspaces = workspaceService.getUserWorkspaces(nickname);
+        model.addAttribute("workspaceBoardCount", workspaces.size());
+        model.addAttribute("workspaces", workspaces);
+        return "workspaces";
     }
 }

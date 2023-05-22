@@ -164,4 +164,11 @@ public class WorkspaceService {
         }
         return workspace.get().getBoards();
     }
+
+    public List<Workspace> getUserWorkspaces(String nickname) {
+        User user = userRepository.findByNickname(nickname);
+        if (user != null)
+         return user.getWorkspaces();
+        return null;
+    }
 }
