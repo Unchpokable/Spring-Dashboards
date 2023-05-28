@@ -4,7 +4,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>My Workspaces</title>
-    <link rel="stylesheet" href="/static/css/workspacepage.css">
+    <link type="text/css" href="/static/css/workspacepage.css" rel="stylesheet" th:href="@{/css/workspacepage.css}">
 </head>
 <body>
 <div class="logout">
@@ -19,10 +19,40 @@
         <li th:each="workspace : ${workspaces}">
             <a href="#" th:text="${workspace.getName()}" th:attr="data-workspace-id=${workspace.getId()}"></a>
         </li>
+        <form name="workspaceCreate" action="javascript:createWorkspace()">
+            <input type="text" id="name" name="name" required>
+        </form>
     </ul>
 </div>
 
-<script src="/static/js/workspace.js">
+<script src="/static/js/workspace.js" th:src="@{/js/workspace.js}">
+</script>
+<script th:inline="javascript">
+    /*<![CDATA[*/
+
+    function createWorkspace() {
+        var userId = /*[[${userId}]]*/ 'default';
+        const workspaceName = document.workspaceCreate.name.value;
+        const data = {
+            userId,
+            workspaceName,
+        };
+        console.log(data);
+        fetch('/workspaces/create', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+            },
+            mode: 'cors',
+            cache: 'no-cache',
+            credentials: 'same-origin',
+            redirect: 'follow',
+            referrerPolicy: 'no-referrer',
+            body: JSON.stringify(data),
+        });
+    }
+
+    /*]]>*/
 </script>
 </body>
 </html>

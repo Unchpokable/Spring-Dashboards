@@ -23,6 +23,10 @@ public class WorkspaceService {
     @Autowired
     private IUserRepository userRepository;
 
+    public User getUserByName(String nickname) {
+        return userRepository.findByNickname(nickname);
+    }
+
     public List<Workspace> getUserWorkspaces(User user) {
         return workspaceRepository.findByUser(user).orElse(null);
     }

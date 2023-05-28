@@ -19,7 +19,7 @@ import java.security.Principal;
 import java.util.List;
 
 @Controller
-@RequestMapping("/api/workspaces")
+@RequestMapping("/workspaces")
 public class WorkspaceController {
     private final WorkspaceService workspaceService;
 
@@ -40,8 +40,13 @@ public class WorkspaceController {
     @GetMapping("/{userId}/create")
     public String createWorkspace(@PathVariable Long userId, String workspaceTitle) { return "create_workspace"; }
 
-    @PostMapping("/{userId}/create")
-    public String createWorkspaces(String workspaceTitle, Model model, Long userId) {
+    @PostMapping("/create")
+    public String createWorkspaces(
+            @RequestParam(name = "workspaceName") String workspaceTitle,
+            Model model,
+            @RequestParam(name = "userId") Long userId
+    ) {
+        System.out.println(userId);
         try {
             workspaceService.createWorkspace(userId, workspaceTitle);
             return "redirect:/{workspaceTitle}";
@@ -60,13 +65,20 @@ public class WorkspaceController {
     }
 
     @DeleteMapping("/delete/{workspaceId}")
-    public ResponseEntity<?> deleteWorkspace(@PathVariable Long workspaceId) {
+    public String deleteWorkspace(@PathVariable Long workspaceId, Model model) {
         //TODO: Authentication check here
 
-        if (workspaceService.removeWorkspace(workspaceId))
-            return ResponseEntity.ok().build();
+        try {
+            workspaceService.removeWorkspace(workspaceId);
+            return "workspaces";
+        }
+        catch (Exception ex){
+            model.addAttribute("message", "Something went wrong");
+            ex.printStackTrace();
+            return "/delete/{workspaceId}";
+        }
 
-        return ResponseEntity.notFound().build();
+
     }
 
     @PutMapping("/rename/{workspaceId}")
@@ -80,37 +92,53 @@ public class WorkspaceController {
     }
 
     @PostMapping("/{workspaceId}/addDashboard")
-    public ResponseEntity<?> addWorkspaceDashboard(@PathVariable Long workspaceId, @RequestBody String dashboard) {
+    public String addWorkspaceDashboard(@PathVariable Long workspaceId, @RequestBody String dashboard, Model model) {
         //TODO: Authentication check here
-        if (!workspaceService.addWorkspaceDashboard(workspaceId, dashboard))
-            return ResponseEntity.badRequest().build();
-        return ResponseEntity.ok().build();
+        try {
+            workspaceService.addWorkspaceDashboard(workspaceId, dashboard);
+            return "redirect:/dashboards";
+        }
+        catch (Exception ex)
+        {
+            model.addAttribute("message", "Something went wrong");
+            ex.printStackTrace();
+            return "/{workspaceId}/addDashboard";
+        }
     }
 
     @DeleteMapping("/deleteDashboard/{workspaceId}/{dashboardId}")
-    public ResponseEntity<?> removeWorkspaceDashboard(@PathVariable Long workspaceId, @PathVariable Long dashboardId) {
+    public String removeWorkspaceDashboard(@PathVariable Long workspaceId, @PathVariable Long dashboardId, Model model) {
         //TODO: Check Authentication here
 
-        if (!workspaceService.removeWorkspaceDashboard(workspaceId, dashboardId)) {
-            return ResponseEntity.badRequest().build();
+        try{
+            workspaceService.removeWorkspaceDashboard(workspaceId, dashboardId);
+        }
+        catch (Exception ex)
+        {
+            model.addAttribute("message", "Something went wrong");
+            ex.printStackTrace();
+            return "redirect:/deleteDashboard/{workspaceId}/{dashboardId}";
         }
 
-        return ResponseEntity.ok().build();
+        return "dashboards";
     }
 
     private boolean isUserOwner(Authentication auth, Long workspaceId) {
         var user = (User)auth.getPrincipal();
-
         return workspaceService.isUserOwner(user.getId(), workspaceId);
     }
 
-    @GetMapping("/dashboards")
-    public String getWorkspaceDashboards(Principal principal, Model model) {
+    @GetMapping("/workspaces")
+    public String getUserWorkspaces(Principal principal, Model model) {
         String nickname = principal.getName();
+        User user = workspaceService.getUserByName(nickname);
+        Long userId = user.getId();
 
         List<Workspace> workspaces = workspaceService.getUserWorkspaces(nickname);
         model.addAttribute("workspaceBoardCount", workspaces.size());
         model.addAttribute("workspaces", workspaces);
+        model.addAttribute("username", nickname);
+        model.addAttribute("userId", userId);
         return "workspaces";
     }
 }

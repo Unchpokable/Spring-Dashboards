@@ -2,13 +2,19 @@ package project.dashboard.controllers;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
+import org.springframework.stereotype.Controller;
+import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 import project.dashboard.models.Dashboard;
 import project.dashboard.models.User;
+import project.dashboard.models.Workspace;
 import project.dashboard.services.DashboardService;
 
-@RestController
-@RequestMapping("/api/dashboards")
+import java.security.Principal;
+import java.util.List;
+
+@Controller
+@RequestMapping("/dashboards")
 public class DashboardController {
     private final DashboardService dashboardService;
 
@@ -18,18 +24,21 @@ public class DashboardController {
     }
 
     @PostMapping("/{workspaceId}/create")
-    public ResponseEntity<?> createDashboard(@PathVariable Long workspaceId, @RequestParam("name") String title) {
+    public String createDashboard(@PathVariable Long workspaceId, @RequestParam("name") String title, Model model) {
         var dashboard = dashboardService.createDashboard(workspaceId, title);
-        if (dashboard == null)
-            return ResponseEntity.ok().build();
-        return ResponseEntity.badRequest().build();
+        if (dashboard == null) {
+            model.addAttribute("message", "Something went wrong");
+            return "/{workspaceId}/create";
+        }
+        return " ";
     }
 
     @DeleteMapping("/remove/{dashboardId}")
-    public ResponseEntity<?> removeDashboard(@PathVariable Long dashboardId) {
+    public String removeDashboard(@PathVariable Long dashboardId, Model model) {
         if (dashboardService.removeDashboard(dashboardId))
-            return ResponseEntity.ok().build();
-        return ResponseEntity.badRequest().build();
+            return " ";
+        model.addAttribute("message", "Something went wrong");
+        return "/remove/{dashboardId}";
     }
 
     @PutMapping("/{dashboardId}/rename")
@@ -46,4 +55,15 @@ public class DashboardController {
         }
         return ResponseEntity.badRequest().build();
     }
+
+//    @GetMapping("/dashboards")
+//    public String getUserDashboards(Principal principal, Model model) {
+//        String nickname = principal.getName();
+//
+//        List<Dashboard> dashboards = dashboardService.getWorkspaceDashboards(nickname);
+//        model.addAttribute("dashboardsCount", dashboards.size());
+//        model.addAttribute("dashboards", dashboards);
+//        return "dashboards";
+//
+//    }
 }

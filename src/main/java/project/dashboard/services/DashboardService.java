@@ -9,7 +9,10 @@ import project.dashboard.models.TaskCard;
 import project.dashboard.models.User;
 import project.dashboard.models.Workspace;
 import project.dashboard.repos.IDashboardRepository;
+import project.dashboard.repos.IUserRepository;
 import project.dashboard.repos.IWorkspaceRepository;
+
+import java.util.List;
 
 
 @Service
@@ -145,4 +148,11 @@ public class DashboardService {
         dashboardRepository.save(dashboard);
         workspaceRepository.save(newWorkspace);
     }
+
+//    public List<Dashboard> getWorkspaceDashboards(String nickname) {
+//        Workspace workspace = workspaceRepository.findByNickname(nickname);
+//        if (workspaceTitle != null)
+//            return workspaceTitle.getBoards();
+//        return null;
+//    }
 }
