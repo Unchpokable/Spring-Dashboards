@@ -53,4 +53,8 @@ public class UserService implements UserDetailsService {
         var candidate = userRepository.findById(id);
         return candidate.orElse(null);
     }
+
+    public User getUserByName(String name) {
+        return userRepository.findByNickname(name);
+    }
 }
