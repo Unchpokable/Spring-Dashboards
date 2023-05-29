@@ -23,6 +23,9 @@ public class DashboardService {
     @Autowired
     private IWorkspaceRepository workspaceRepository;
 
+    @Autowired
+    private IUserRepository userRepository;
+
     @Transactional
     public Dashboard createDashboard(Workspace root, String title) {
         ArgumentGuard.assertNotNull(root);
@@ -147,6 +150,14 @@ public class DashboardService {
         dashboard.setWorkspace(newWorkspace);
         dashboardRepository.save(dashboard);
         workspaceRepository.save(newWorkspace);
+    }
+
+    public List<Dashboard> getWorkspaceDashboards(String nickname) {
+        var userCandidate = userRepository.findByNickname(nickname);
+        if (userCandidate == null)
+            return null;
+
+        return null;
     }
 
 //    public List<Dashboard> getWorkspaceDashboards(String nickname) {
