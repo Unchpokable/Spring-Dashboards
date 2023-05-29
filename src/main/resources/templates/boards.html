@@ -9,13 +9,14 @@
 <body>
 <div>
   <div class="logout">
-    <span th:text="${username}"></span>
-    <a href="/logout" class="logout">Logout</a>
+    <a href="/user/page" th:href="@{/user/profile}" th:text="${username}"></a>
+    <a href="/logout" th:href="@{/logout}">Logout</a>
   </div>
 
   <div class="workspace_container">
     <h1>My Boards at workspace <span th:text="${parentWorkspaceName}"></span></h1>
     <span> You have <span th:text="${boardsCount}"></span> owned boards here:</span>
+    <p></p>
     <div class="dashboards">
       <div th:each="board : ${dashboards}" th:attr="data-board-id=${board.getId()}" class="workspace">
         <span th:text="${board.getName()}"></span>

@@ -7,15 +7,17 @@
     <link type="text/css" href="/static/css/workspacepage.css" rel="stylesheet" th:href="@{/css/workspacepage.css}">
 </head>
 <body>
-<div class="logout">
-    <span><span th:text="${username}"></span></span>
-    <a href="/logout" class="logout">Logout</a>
-</div>
 <div>
+    <div class="logout">
+        <a href="/user/page" th:href="@{/user/profile}" th:text="${username}"></a>
+        <a href="/logout" th:href = "@{/logout}">Logout</a>
+    </div>
+
     <div class="workspace_container">
         <h1>My Workspaces</h1>
         <span> You have an <span th:text="${workspaceBoardsCount}"></span> owned workspaces:</span>
-        <div class="workspaces">
+        <p></p>
+        <div class="dashboards">
             <div th:each="workspace : ${workspaces}" th:attr="data-workspace-id=${workspace.getId()}" class="workspace">
                 <span th:text="${workspace.getName()}"></span>
                 <button class="delete-button">Delete</button>
