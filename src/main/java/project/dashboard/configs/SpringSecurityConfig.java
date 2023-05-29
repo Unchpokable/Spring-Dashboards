@@ -15,12 +15,13 @@ public class SpringSecurityConfig{
 
     @Bean
     public SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
-        http
+        http    .csrf().disable().cors().disable()
                 .authorizeHttpRequests()
                 .requestMatchers("/login", "/registration").permitAll()
                 .anyRequest().authenticated()
                 .and()
                 .formLogin()
+                .defaultSuccessUrl("/user/profile")
                 .permitAll()
                 .and()
                 .logout()
