@@ -4,20 +4,40 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Task Board</title>
-  <link rel="stylesheet" href="/static/css/dashboard.css">
+  <link rel="stylesheet" href="/static/css/dashboard.css" th:href="@{/css/dashbord.css}">
+  <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
 </head>
 <body>
 <header>
-  <h1 th:text="${boardName}">Task Board</h1>
+  <div class="header-left">
+    <form th:action="@{/workspaces/{userId}(userId=${userId})}" method="get">
+      <button type="submit" class="back-button">Back to Workspace</button>
+    </form>
+  </div>
+  <div class="header-right">
+    <form th:action="@{/profile/{userId}(userId=${userId})}" method="get">
+      <button type="submit" class="profile-button">Profile</button>
+    </form>
+    <form th:action="@{/logout}" method="post">
+      <button type="submit" class="logout-button">Logout</button>
+    </form>
+  </div>
+
+  <h1>Task Board</h1>
 </header>
 
-<div class="board">
+<div class="board" th:attr="data-board-id=${boardId}">
   <div class="column">
     <h2>Planned</h2>
     <div class="card" th:each="task : ${plannedTasks}" draggable="true" ondragstart="drag(event)">
       <h3 th:text="${task.title}">Task 1</h3>
       <p th:text="${task.description}">Lorem ipsum dolor sit amet, consectetur adipiscing elit.</p>
-      <span class="user" th:text="${task.user}">John Doe</span>
+      <span class="user" th:text="${task.assignedUser}">John Doe</span>
+    </div>
+    <div class="add-card">
+      <button class="add-button" onclick="openModal('planned')">
+        <span class="material-icons">add</span>
+      </button>
     </div>
   </div>
 
@@ -26,7 +46,12 @@
     <div class="card" th:each="task : ${inProgressTasks}" draggable="true" ondragstart="drag(event)">
       <h3 th:text="${task.title}">Task 3</h3>
       <p th:text="${task.description}">Vivamus sagittis lacus vel augue laoreet rutrum faucibus dolor auctor.</p>
-      <span class="user" th:text="${task.user}">John Doe</span>
+      <span class="user" th:text="${task.assignedUser}">John Doe</span>
+    </div>
+    <div class="add-card">
+      <button class="add-button" onclick="openModal('inProgress')">
+        <span class="material-icons">add</span>
+      </button>
     </div>
   </div>
 
@@ -35,7 +60,12 @@
     <div class="card" th:each="task : ${problemTasks}" draggable="true" ondragstart="drag(event)">
       <h3 th:text="${task.title}">Task 4</h3>
       <p th:text="${task.description}">Maecenas faucibus mollis interdum.</p>
-      <span class="user" th:text="${task.user}">Jane Smith</span>
+      <span class="user" th:text="${task.assignedUser}">Jane Smith</span>
+    </div>
+    <div class="add-card">
+      <button class="add-button" onclick="openModal('problem')">
+        <span class="material-icons">add</span>
+      </button>
     </div>
   </div>
 
@@ -44,26 +74,41 @@
     <div class="card" th:each="task : ${doneTasks}" draggable="true" ondragstart="drag(event)">
       <h3 th:text="${task.title}">Task 6</h3>
       <p th:text="${task.description}">Donec id elit non mi porta gravida at eget metus.</p>
-      <span class="user" th:text="${task.user}">Jane Smith</span>
+      <span class="user" th:text="${task.assignedUser}">Jane Doe</span>
+    </div>
+    <div class="add-card">
+      <button class="add-button" onclick="openModal('done')">
+        <span class="material-icons">add</span>
+      </button>
     </div>
   </div>
 </div>
 
-<script>
-    function drag(event) {
-      event.dataTransfer.setData("text", event.target.id);
-    }
+<!-- Modal for Add Card -->
+<div id="addCardModal" class="modal">
+  <div class="modal-content">
+    <span class="close" onclick="closeModal()">&times;</span>
+    <form id="addCardForm" method="post" action="/cards/add">
+      <h2>Add Card</h2>
+      <input type="hidden" id="columnId" name="columnId" value="">
+      <label for="title">Title:</label>
+      <input type="text" id="title" name="title" required>
+      <label for="description">Description:</label>
+      <textarea id="description" name="description" required></textarea>
+      <label for="user">User:</label>
+      <input type="text" id="user" name="user" required>
+      <input type="date" id="deadline" name="dueDate" placeholder="Due Date" required>
+      <select id="categorySelect" name="category" required>
+        <option value="Planned">Planned</option>
+        <option value="In Progress">In Progress</option>
+        <option value="Some Problems">Some Problems</option>
+        <option value="Done">Done</option>
+      </select>
+      <button type="submit">Add Card</button>
+    </form>
+  </div>
+</div>
 
-    function allowDrop(event) {
-      event.preventDefault();
-    }
-
-    function drop(event) {
-      event.preventDefault();
-      var data = event.dataTransfer.getData("text");
-      event.target.appendChild(document.getElementById(data));
-    }
-  </script>
-
+<script src="/static/js/addcard.js" th:src="@{/js/addcard.js}"></script>
 </body>
 </html>

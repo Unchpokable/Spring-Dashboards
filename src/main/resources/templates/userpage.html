@@ -4,17 +4,20 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>User Profile</title>
-    <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Roboto">
-    <link rel="stylesheet" href="/static/css/styles.css">
+    <link rel="stylesheet" th:href="@{https://fonts.googleapis.com/css?family=Roboto}" href="https://fonts.googleapis.com/css?family=Roboto">
+    <link rel="stylesheet" th:href="@{/css/styles.css}" href="/static/css/styles.css">
 </head>
 <body>
 
 <div class="container">
+    <h1>
+        <a th:href="@{/workspaces/{usrId}(usrId=${userId})}" class="back-link">Back to my workspaces</a>
+    </h1>
     <div class="profile">
         <h1>
             <p th:text="${username}"> - Edit Profile</p>
         </h1>
-        <img th:src="${'data:image/png;base64,',+image}" alt="Avatar" class="avatar">
+<!--        <img th:src="${'data:image/png;base64,',+image}" alt="Avatar" class="avatar">-->
         <div class="form">
             <div class="username">
                 <label for="username">Username:</label>

@@ -4,32 +4,36 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Boards</title>
-  <link rel="stylesheet" href="/static/css/workspacepage.css">
+  <link rel="stylesheet" href="/static/css/workspacepage.css" th:href="@{/css/workspacepage.css}">
 </head>
 <body>
-<div class="logout">
-  <span><span th:text="${username}"></span></span>
-  <a href="/logout" class="logout">Logout</a>
+<div>
+  <div class="logout">
+    <span th:text="${username}"></span>
+    <a href="/logout" class="logout">Logout</a>
+  </div>
+
+  <div class="workspace_container">
+    <h1>My Boards at workspace <span th:text="${parentWorkspaceName}"></span></h1>
+    <span> You have <span th:text="${boardsCount}"></span> owned boards here:</span>
+    <div class="dashboards">
+      <div th:each="board : ${dashboards}" th:attr="data-board-id=${board.getId()}" class="workspace">
+        <span th:text="${board.getName()}"></span>
+        <button class="delete-button">Delete</button>
+      </div>
+    </div>
+  </div>
+
+  <div class="create_workspace">
+    <h2>Create New Board</h2>
+    <form id="createBoardForm" th:attr="data-workspace-id=${workspaceId}">
+      <input type="text" id="boardName" placeholder="Enter board name" required>
+      <button type="submit">Create</button>
+    </form>
+  </div>
 </div>
 
-<div class="workspace_container">
-  <h1>My Boards at workspace <span th:text="{parentWorkspaceName}"></span></h1>
-  <span> You have <span th:text="${workspaceBoardsCount}"></span> owned boards here:</span>
-  <ul>
-    <li th:each="board : ${ownedBoards}">
-      <a href="#" th:text="${board.getTitle()}" th:attr="data-board-id=${board.getId()}"></a>
-    </li>
-  </ul>
-
-  <span>You are a participant at boards:</span>
-  <ul>
-    <li th:each="board : ${sharedBoards}">
-      <a href="#" th:text="${board.getTitle()}" th:attr="data-board-id=${board.getId()}"></a>
-    </li>
-  </ul>
-</div>
-
-<script src="/static/js/board.js">
+<script src="/static/js/board.js" th:src="@{/js/board.js}">
 </script>
 </body>
 </html>

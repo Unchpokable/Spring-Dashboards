@@ -19,6 +19,13 @@ h1 {
 .workspace_container {
     width: 100%;
     margin-left: 50px;
+    margin-top: 100px;
+}
+
+.create_workspace {
+    width: 100%;
+    margin-left: 50px;
+    margin-top: 100px;
 }
 
 .container {
@@ -165,4 +172,26 @@ li a:hover {
 li span {
     color: #a0a0a0;
     margin-left: 5px;
+}
+
+.workspace {
+  border: 1px solid #383838;
+  border-radius: 10px;
+  background-color: #292828;
+  padding: 10px;
+  margin-bottom: 10px;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  transition: background-color 0.3s ease;
+}
+
+.workspace:hover {
+  background-color: #454545;
+  cursor: pointer;
+}
+
+.workspace .delete-button {
+  margin-left: 10px;
+  padding: 5px;
 }
