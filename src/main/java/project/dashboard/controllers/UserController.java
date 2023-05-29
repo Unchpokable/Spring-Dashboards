@@ -21,16 +21,18 @@ public class UserController {
         this.userService = userService;
     }
 
-    @GetMapping("/page")
-    public String GetUserPage(Principal principal, Model model, @PathVariable Long userId) {
-        var user = userService.getUser(userId);
+    @GetMapping("/profile")
+    public String GetUserPage(Principal principal, Model model) {
+        var userName = principal.getName();
+        var user = userService.getUserByName(userName);
         if (user == null)
             return "errorpage404";
 
+        model.addAttribute("userId", user.getId());
         model.addAttribute("username", user.getNickname());
         model.addAttribute("email", user.getEmail());
         model.addAttribute("about", user.getAdditionalInfo());
-        model.addAttribute("avatar", Base64.getEncoder().encode(user.getAvatar()));
+//        model.addAttribute("avatar", Base64.getEncoder().encode(user.getAvatar()));
 
         return "userpage";
     }
