@@ -175,4 +175,9 @@ public class WorkspaceService {
          return user.getWorkspaces();
         return null;
     }
+
+    public Workspace getWorkspaceByItsId(Long wsId) {
+        var maybeWs = workspaceRepository.findById(wsId);
+        return maybeWs.orElse(null);
+    }
 }
