@@ -21,6 +21,9 @@ public class TaskCard {
     @Column(nullable = false, name = "deadline")
     private Instant deadline;
 
+    @Column(nullable = false, name = "category")
+    private TaskCategory category;
+
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "board_id", nullable = false)
     private Dashboard board;
