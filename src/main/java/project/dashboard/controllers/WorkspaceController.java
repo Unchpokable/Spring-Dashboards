@@ -8,66 +8,62 @@ import org.springframework.security.core.Authentication;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
-import project.dashboard.models.Dashboard;
 import project.dashboard.models.User;
-import project.dashboard.models.Workspace;
 import project.dashboard.services.DashboardService;
 import project.dashboard.services.UserService;
 import project.dashboard.services.WorkspaceService;
 
 import java.security.Principal;
-import java.util.List;
 
 @Controller
 @RequestMapping("/workspaces")
 public class WorkspaceController {
     private final WorkspaceService workspaceService;
-
-
+    private final UserService userService;
+    private final DashboardService dashboardService;
 
     @Autowired
-    public WorkspaceController(WorkspaceService workspaceService) {
+    public WorkspaceController(WorkspaceService workspaceService, UserService userService, DashboardService dashboardService) {
         this.workspaceService = workspaceService;
+        this.userService = userService;
+        this.dashboardService = dashboardService;
     }
-
-//    @PostMapping("/{userId}/create")
-//    public ResponseEntity<?> createWorkspace(@PathVariable Long userId, @RequestBody String workspace) {
-//        if (workspaceService.createWorkspace(userId, workspace))
-//            return ResponseEntity.ok().build();
-//        return ResponseEntity.badRequest().build();
-//    }
-
-    @GetMapping("/{userId}/create")
-    public String createWorkspace(@PathVariable Long userId, String workspaceTitle) { return "create_workspace"; }
 
     @PostMapping("/create")
-    public String createWorkspaces(
-            @RequestParam(name = "workspaceName") String workspaceTitle,
-            Model model,
-            @RequestParam(name = "userId") Long userId
-    ) {
-        System.out.println(userId);
-        try {
-            workspaceService.createWorkspace(userId, workspaceTitle);
-            return "redirect:/{workspaceTitle}";
-        }
-        catch (Exception ex)
-        {
-            model.addAttribute("message", "Something went wrong");
-            ex.printStackTrace();
-            return "/{userId}/create";
-        }
+    public String createWorkspaces(Principal principal, @RequestBody String workspaceTitle, Model model) {
+            var user = userService.getUserByName(principal.getName());
+            if (user == null)
+                return "errorpage404";
+            var userId = user.getId();
+            if (!workspaceService.createWorkspace(userId, workspaceTitle))
+                return "workspaces";
+            return "workspaces";
     }
 
-    @GetMapping("/{userId}/list")
-    public List<Workspace> getUserWorkspaces(@PathVariable Long userId) {
-        return workspaceService.getUserWorkspaces(userId);
+    @GetMapping("/{userId}")
+    public String getUserWorkspaces(@PathVariable Long userId, Model model) {
+        var workspaces = workspaceService.getUserWorkspaces(userId);
+        var user = userService.getUser(userId);
+        model.addAttribute("username", user.getNickname());
+        model.addAttribute("workspaceBoardsCount", workspaces.size());
+        model.addAttribute("workspaces", workspaces);
+        return "workspaces";
+    }
+
+    @GetMapping("/workspace/{workspaceId}")
+    public String getUserDashboardsOnWorkspace(@PathVariable Long workspaceId, Model model, Principal principal) {
+        var dashboards = workspaceService.getWorkspaceDashboards(workspaceId);
+
+        model.addAttribute("username", principal.getName());
+        model.addAttribute("boardsCount", dashboards.size());
+        model.addAttribute("parentWorkspaceName", workspaceService.getWorkspaceByItsId(workspaceId).getName());
+        model.addAttribute("workspaceId", workspaceId);
+        model.addAttribute("dashboards", dashboards);
+        return "boards";
     }
 
     @DeleteMapping("/delete/{workspaceId}")
     public String deleteWorkspace(@PathVariable Long workspaceId, Model model) {
-        //TODO: Authentication check here
-
         try {
             workspaceService.removeWorkspace(workspaceId);
             return "workspaces";
@@ -77,8 +73,6 @@ public class WorkspaceController {
             ex.printStackTrace();
             return "/delete/{workspaceId}";
         }
-
-
     }
 
     @PutMapping("/rename/{workspaceId}")
@@ -126,19 +120,5 @@ public class WorkspaceController {
     private boolean isUserOwner(Authentication auth, Long workspaceId) {
         var user = (User)auth.getPrincipal();
         return workspaceService.isUserOwner(user.getId(), workspaceId);
-    }
-
-    @GetMapping("/workspaces")
-    public String getUserWorkspaces(Principal principal, Model model) {
-        String nickname = principal.getName();
-        User user = workspaceService.getUserByName(nickname);
-        Long userId = user.getId();
-
-        List<Workspace> workspaces = workspaceService.getUserWorkspaces(nickname);
-        model.addAttribute("workspaceBoardCount", workspaces.size());
-        model.addAttribute("workspaces", workspaces);
-        model.addAttribute("username", nickname);
-        model.addAttribute("userId", userId);
-        return "workspaces";
     }
 }
