@@ -2,11 +2,11 @@ body {
     background-color: #1f1f1f;
     color: #fff;
     font-family: 'Roboto', sans-serif;
-    display: flex;
-    justify-content: top-left;
+    /*justify-content: top-left;*/
     align-items: top-left;
-    height: 100vh;
     text-align: top-left;
+    margin: 50px;
+    margin-right: 150px;
 }
 
 h1 {
@@ -132,17 +132,14 @@ a:hover {
     color: #1976d2;
 }
 
-.logout {
+div .logout {
     display: flex;
     justify-content: flex-end;
     align-items: center;
-    margin-right: 10px;
     background: #4E9CAF;
     padding: 10px;
     border-radius: 5px;
-    color: white;
     font-weight: bold;
-    line-height: 25px;
 }
 
 .logout a {
