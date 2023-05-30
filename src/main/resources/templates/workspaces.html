@@ -21,7 +21,10 @@
             <div th:each="workspace : ${workspaces}" th:attr="data-workspace-id=${workspace.getId()}" class="workspace">
 <!--                <span th:text="${workspace.getName()}"></span>-->
                 <a class="workspace-link" th:href="@{/workspaces/workspace/{wsId}(wsId=${workspace.getId()})}" th:text="${workspace.getName()}"></a>
-                <button th:attr="data-workspace-id=${workspace.getId()}" class="delete-button">Delete</button>
+                <div>
+                    <button th:attr="data-workspace-id=${workspace.getId()}" class="delete-button">Delete</button>
+                    <button th:attr="data-workspace-id=${workspace.getId()}" class="rename-button">Rename</button>
+                </div>
             </div>
         </div>
     </div>

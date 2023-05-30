@@ -74,3 +74,29 @@ deleteBtns.forEach(function(deleteBtn){
         });
     });
 });
+
+const renameBtns = document.querySelectorAll(".rename-button");
+renameBtns.forEach(function(renameBtn){
+    renameBtn.addEventListener("click", function() {
+        var newName = prompt("Please, enter new name for this dashboard", "");
+        if (newName == null)
+            return;
+
+        var boardId = renameBtn.getAttribute("data-board-id");
+
+        var params = new URLSearchParams({
+                    name: newName,
+                    board: boardId
+                });
+        fetch("/api/dashboards/rename?" + params, {
+              method: "PUT",
+              headers: {
+                  "Content-Type": "application/json",
+              }
+          })
+        .then(response => {
+           if (response.ok)
+               location.reload();
+        });
+    });
+})
