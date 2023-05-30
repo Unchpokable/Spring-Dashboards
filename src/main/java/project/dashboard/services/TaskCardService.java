@@ -6,6 +6,7 @@ import org.springframework.transaction.annotation.Transactional;
 import project.dashboard.internal.ArgumentGuard;
 import project.dashboard.models.Dashboard;
 import project.dashboard.models.TaskCard;
+import project.dashboard.models.TaskCategory;
 import project.dashboard.models.User;
 import project.dashboard.repos.ICardRepository;
 import project.dashboard.repos.IDashboardRepository;
@@ -83,6 +84,19 @@ public class TaskCardService {
         ArgumentGuard.assertNotNull(card);
 
         card.setDeadline(deadline);
+        cardRepository.save(card);
+    }
+
+    @Transactional
+    public void editTaskCardCategory(Long cardId, TaskCategory newCategory) {
+        ArgumentGuard.assertNotNull(newCategory);
+
+        var card = cardRepository.findById(cardId).orElse(null);
+
+        if (card == null)
+            return;
+
+        card.setCategory(newCategory);
         cardRepository.save(card);
     }
 }
