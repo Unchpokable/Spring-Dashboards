@@ -1,5 +1,6 @@
 package project.dashboard.services;
 
+import org.hibernate.sql.Update;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
@@ -7,8 +8,10 @@ import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 import project.dashboard.models.Role;
 import project.dashboard.models.User;
+import project.dashboard.models.internals.UpdateUserInfoRequestData;
 import project.dashboard.repos.IUserRepository;
 
 import java.util.Collections;
@@ -56,5 +59,20 @@ public class UserService implements UserDetailsService {
 
     public User getUserByName(String name) {
         return userRepository.findByNickname(name);
+    }
+
+    @Transactional
+    public void updateUserInfo(UpdateUserInfoRequestData data, Long userId) {
+        var dbUser = userRepository.findById(userId);
+        if (dbUser.isEmpty())
+            return;
+
+        var user = dbUser.get();
+
+        user.setNickname(data.getNickname());
+        user.setEmail(data.getEmail());
+        user.setAdditionalInfo(data.getAbout());
+
+        userRepository.save(user);
     }
 }
