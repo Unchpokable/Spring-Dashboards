@@ -4,6 +4,8 @@ import jakarta.persistence.*;
 import project.dashboard.internal.InstantConverter;
 import project.dashboard.models.internals.TaskCardCreationRequestData;
 
+import java.sql.Date;
+import java.text.SimpleDateFormat;
 import java.time.Instant;
 
 @Entity
@@ -95,5 +97,11 @@ public class TaskCard {
 
     public void setId(Long id) {
         this.id = id;
+    }
+
+    public String getStringDeadline() {
+        var date = Date.from(deadline);
+        var formatter = new SimpleDateFormat("dd.MM.yyyy");
+        return " - until " + formatter.format(date);
     }
 }

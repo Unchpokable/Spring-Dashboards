@@ -63,3 +63,29 @@ deleteBtns.forEach(function(deleteBtn){
         });
     });
 });
+
+const renameBtns = document.querySelectorAll(".rename-button");
+renameBtns.forEach(function(renameBtn){
+    renameBtn.addEventListener("click", function() {
+        var newName = prompt("Please, enter new name for this workspace", "");
+        if (newName == null)
+            return;
+
+        var workspaceId = renameBtn.getAttribute("data-workspace-id");
+
+        var params = new URLSearchParams({
+                    name: newName,
+                    workspace: workspaceId
+                });
+        fetch("/api/workspaces/rename?" + params, {
+              method: "PUT",
+              headers: {
+                  "Content-Type": "application/json",
+              }
+          })
+        .then(response => {
+           if (response.ok)
+               location.reload();
+        });
+    });
+})

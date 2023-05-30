@@ -40,4 +40,11 @@ public class WorkspaceRESTController {
             return ResponseEntity.ok().build();
         return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).build();
     }
+
+    @PutMapping("/rename")
+    public ResponseEntity<?> renameWorkspace(@RequestParam("name") String newName, @RequestParam("workspace") Long wsId) {
+        if (workspaceService.renameWorkspace(wsId, newName))
+            return ResponseEntity.ok().build();
+        return ResponseEntity.badRequest().build();
+    }
 }

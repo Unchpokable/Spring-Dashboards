@@ -31,6 +31,7 @@
       <h3 th:text="${task.title}">Task 1</h3>
       <p th:text="${task.description}">Lorem ipsum dolor sit amet, consectetur adipiscing elit.</p>
       <span class="user" th:text="${task.assignedUser.nickname}">John Doe</span>
+      <span class="user" th:text="${task.getStringDeadline()}">25/03/2023</span>
       <p></p>
       <button class="add-button" th:attr="onclick=|deleteCard('${task.getId()}')|">
         <span class="material-icons">delete</span>
@@ -49,6 +50,7 @@
       <h3 th:text="${task.title}">Task 3</h3>
       <p th:text="${task.description}">Vivamus sagittis lacus vel augue laoreet rutrum faucibus dolor auctor.</p>
       <span class="user" th:text="${task.assignedUser.nickname}">John Doe</span>
+      <span class="user" th:text="${task.getStringDeadline()}">25/03/2023</span>
       <p></p>
       <button class="add-button" th:attr="onclick=|deleteCard('${task.getId()}')|">
         <span class="material-icons">delete</span>
@@ -67,6 +69,7 @@
       <h3 th:text="${task.title}" th:attr="data-card-id=${task.getId()}">Task 4</h3>
       <p th:text="${task.description}">Maecenas faucibus mollis interdum.</p>
       <span class="user" th:text="${task.assignedUser.nickname}">Jane Smith</span>
+      <span class="user" th:text="${task.getStringDeadline()}">25/03/2023</span>
       <p></p>
       <button class="add-button" th:attr="onclick=|deleteCard('${task.getId()}')|">
         <span class="material-icons">delete</span>
@@ -85,6 +88,7 @@
       <h3 th:text="${task.title}">Task 6</h3>
       <p th:text="${task.description}">Donec id elit non mi porta gravida at eget metus.</p>
       <span class="user" th:text="${task.assignedUser.nickname}">Jane Doe</span>
+      <span class="user" th:text="${task.getStringDeadline()}">25/03/2023</span>
       <p></p>
       <button class="add-button" th:attr="onclick=|deleteCard('${task.getId()}')|">
         <span class="material-icons">delete</span>

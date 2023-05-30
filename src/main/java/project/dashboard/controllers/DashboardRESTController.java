@@ -59,4 +59,11 @@ public class DashboardRESTController {
         }
         return ResponseEntity.ok().build();
     }
+
+    @PutMapping("/rename")
+    public ResponseEntity<?> renameDashboard(@RequestParam("name") String newName, @RequestParam("board") Long boardId) {
+        if (dashboardService.renameDashboard(boardId, newName))
+            return ResponseEntity.ok().build();
+        return ResponseEntity.badRequest().build();
+    }
 }
