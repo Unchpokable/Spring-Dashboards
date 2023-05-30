@@ -1,0 +1,52 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Boards</title>
+  <link rel="stylesheet" href="/static/css/workspacepage.css" th:href="@{/css/workspacepage.css}">
+</head>
+<body>
+<div>
+  <div class="logout">
+    <a href="/user/page" th:href="@{/user/profile}" th:text="${username}"></a>
+    <a href="/logout" th:href="@{/logout}">Logout</a>
+  </div>
+
+  <h1>
+    <a th:href="@{/workspaces/{usrId}(usrId=${userId})}" class="back-link">Back to my workspaces</a>
+  </h1>
+
+  <div class="workspace_container">
+    <h1>My Boards at workspace <span th:text="${parentWorkspaceName}"></span></h1>
+    <span> You have <span th:text="${boardsCount}"></span> owned boards here:</span>
+    <p></p>
+    <div class="dashboards">
+      <div th:each="board : ${dashboards}" th:attr="data-board-id=${board.getId()}" class="workspace">
+        <a class="workspace-link" th:href="@{/dashboards/board/{bId}(bId=${board.getId()})}" th:text="${board.getName()}"></a>
+        <button th:attr="data-board-id=${board.getId()}" class="delete-button">Delete</button>
+      </div>
+    </div>
+    <p></p>
+    <span>You are participant of <span th:text="${sharedBoardsCount}"></span> boards:</span>
+    <p></p>
+    <div class="dashboards">
+      <div th:each="board : ${sharedBoards}" th:attr="data-board-id=${board.getId()}" class="workspace">
+        <a class="workspace-link" th:href="@{/dashboards/board/{bId}(bId=${board.getId()})}" th:text="${board.getName()}"></a>
+      </div>
+    </div>
+  </div>
+
+  <div class="create_workspace">
+    <h2>Create New Board</h2>
+    <form id="createBoardForm" th:attr="data-workspace-id=${workspaceId}">
+      <input type="text" id="boardName" placeholder="Enter board name" required>
+      <button type="submit">Create</button>
+    </form>
+  </div>
+</div>
+
+<script src="/static/js/board.js" th:src="@{/js/board.js}">
+</script>
+</body>
+</html>
