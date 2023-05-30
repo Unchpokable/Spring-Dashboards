@@ -1,6 +1,8 @@
 package project.dashboard.models;
 
 import jakarta.persistence.*;
+import project.dashboard.internal.InstantConverter;
+import project.dashboard.models.internals.TaskCardCreationRequestData;
 
 import java.time.Instant;
 
@@ -66,5 +68,32 @@ public class TaskCard {
 
     public void setDeadline(Instant deadline) {
         this.deadline = deadline;
+    }
+
+    public TaskCategory getCategory() {
+        return category;
+    }
+
+    public void setCategory(TaskCategory category) {
+        this.category = category;
+    }
+
+    public void setBoard(Dashboard board) {
+        this.board = board;
+    }
+
+    public void fillFieldsFromCreationData(TaskCardCreationRequestData data) {
+        title = data.getTitle();
+        description = data.getDescription();
+        deadline = InstantConverter.toInstant(data.getDeadline());
+        category = data.getCategory();
+    }
+
+    public Long getId() {
+        return id;
+    }
+
+    public void setId(Long id) {
+        this.id = id;
     }
 }
