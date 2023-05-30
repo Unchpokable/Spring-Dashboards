@@ -29,17 +29,6 @@ public class WorkspaceController {
         this.dashboardService = dashboardService;
     }
 
-    @PostMapping("/create")
-    public String createWorkspaces(Principal principal, @RequestBody String workspaceTitle, Model model) {
-            var user = userService.getUserByName(principal.getName());
-            if (user == null)
-                return "errorpage404";
-            var userId = user.getId();
-            if (!workspaceService.createWorkspace(userId, workspaceTitle))
-                return "workspaces";
-            return "workspaces";
-    }
-
     @GetMapping("/{userId}")
     public String getUserWorkspaces(@PathVariable Long userId, Model model) {
         var workspaces = workspaceService.getUserWorkspaces(userId);
@@ -54,6 +43,11 @@ public class WorkspaceController {
     public String getUserDashboardsOnWorkspace(@PathVariable Long workspaceId, Model model, Principal principal) {
         var dashboards = workspaceService.getWorkspaceDashboards(workspaceId);
 
+        String nickname = principal.getName();
+        var sharedDashboards = dashboardService.getSharedDashboardsForUser(nickname);
+        model.addAttribute("sharedBoardsCount", sharedDashboards.size());
+        model.addAttribute("sharedBoards", sharedDashboards);
+        model.addAttribute("userId", userService.getUserByName(principal.getName()).getId());
         model.addAttribute("username", principal.getName());
         model.addAttribute("boardsCount", dashboards.size());
         model.addAttribute("parentWorkspaceName", workspaceService.getWorkspaceByItsId(workspaceId).getName());
@@ -62,63 +56,11 @@ public class WorkspaceController {
         return "boards";
     }
 
-    @DeleteMapping("/delete/{workspaceId}")
-    public String deleteWorkspace(@PathVariable Long workspaceId, Model model) {
-        try {
-            workspaceService.removeWorkspace(workspaceId);
-            return "workspaces";
-        }
-        catch (Exception ex){
-            model.addAttribute("message", "Something went wrong");
-            ex.printStackTrace();
-            return "/delete/{workspaceId}";
-        }
-    }
-
     @PutMapping("/rename/{workspaceId}")
     public ResponseEntity<?> editWorkspace(@PathVariable Long workspaceId, @RequestParam("name") String newName) {
-
-        //TODO: Authentication check here
         if (!workspaceService.renameWorkspace(workspaceId, newName)) {
             return ResponseEntity.status(HttpStatus.NO_CONTENT).build();
         }
         return ResponseEntity.ok().build();
-    }
-
-    @PostMapping("/{workspaceId}/addDashboard")
-    public String addWorkspaceDashboard(@PathVariable Long workspaceId, @RequestBody String dashboard, Model model) {
-        //TODO: Authentication check here
-        try {
-            workspaceService.addWorkspaceDashboard(workspaceId, dashboard);
-            return "redirect:/dashboards";
-        }
-        catch (Exception ex)
-        {
-            model.addAttribute("message", "Something went wrong");
-            ex.printStackTrace();
-            return "/{workspaceId}/addDashboard";
-        }
-    }
-
-    @DeleteMapping("/deleteDashboard/{workspaceId}/{dashboardId}")
-    public String removeWorkspaceDashboard(@PathVariable Long workspaceId, @PathVariable Long dashboardId, Model model) {
-        //TODO: Check Authentication here
-
-        try{
-            workspaceService.removeWorkspaceDashboard(workspaceId, dashboardId);
-        }
-        catch (Exception ex)
-        {
-            model.addAttribute("message", "Something went wrong");
-            ex.printStackTrace();
-            return "redirect:/deleteDashboard/{workspaceId}/{dashboardId}";
-        }
-
-        return "dashboards";
-    }
-
-    private boolean isUserOwner(Authentication auth, Long workspaceId) {
-        var user = (User)auth.getPrincipal();
-        return workspaceService.isUserOwner(user.getId(), workspaceId);
     }
 }
