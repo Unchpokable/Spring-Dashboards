@@ -1,28 +1,3 @@
-document.addEventListener('DOMContentLoaded', function() {
-    var workspaceLinks = document.querySelectorAll('a[data-workspace-id]');
-    workspaceLinks.forEach(function(link) {
-        link.addEventListener('click', function(event) {
-            var workspaceId = link.getAttribute('data-workspace-id');
-            var requestUrl = '/workspace/' + workspaceId;
-            fetch(requestUrl, {
-                method: 'GET',
-            })
-            .then(function(response) {
-                if (response.ok) {
-                    window.location.href = requestUrl;
-                } else {
-                    console.error('Error:', response.statusText);
-                }
-            })
-            .catch(function(error) {
-                console.error('Error:', error);
-            });
-            event.preventDefault();
-        });
-    });
-});
-
-
 document.getElementById('createWorkspaceForm').addEventListener('submit', function(event) {
   event.preventDefault(); // Prevent form submission
 
@@ -30,7 +5,7 @@ document.getElementById('createWorkspaceForm').addEventListener('submit', functi
   var workspaceName = document.getElementById('workspaceName').value;
 
   // Send a POST request to the server to create a new workspace
-  fetch('/workspaces/create', {
+  fetch('/api/workspaces/create', {
     method: 'POST',
     headers: {
       'Content-Type': 'application/json',
@@ -52,13 +27,39 @@ document.getElementById('createWorkspaceForm').addEventListener('submit', functi
   });
 });
 
-document.addEventListener('DOMContentLoaded', function() {
-  var workspaces = document.querySelectorAll('.workspace');
+//document.addEventListener('DOMContentLoaded', function() {
+//  var workspaces = document.querySelectorAll('.workspace');
+//
+//  workspaces.forEach(function(workspace) {
+//    workspace.addEventListener('click', function() {
+//      var id = workspace.getAttribute('data-workspace-id');
+//      window.location.href = '/workspaces/workspace/' + id;
+//    });
+//  });
+//});
 
-  workspaces.forEach(function(workspace) {
-    workspace.addEventListener('click', function() {
-      var id = workspace.getAttribute('data-workspace-id');
-      window.location.href = '/workspaces/workspace/' + id;
+const deleteBtns = document.querySelectorAll('.delete-button');
+deleteBtns.forEach(function(deleteBtn){
+    deleteBtn.addEventListener("click", function() {
+      var id = deleteBtn.getAttribute("data-workspace-id")
+
+      if (!confirm("Are you sure to remove this workspace? This action will also remove all boards in this workspace"))
+        return;
+
+      const url = `/api/workspaces/delete/${id}`;
+      const request = new Request(url, { method: "DELETE" });
+
+      fetch(request)
+        .then(response => {
+          if (response.ok) {
+            location.reload();
+            console.log('workspace removed');
+          } else {
+            // Действия при ошибке удаления
+          }
+        })
+        .catch(error => {
+          // Действия при ошибке запроса
+        });
     });
-  });
 });

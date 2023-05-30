@@ -27,7 +27,7 @@ document.getElementById('createBoardForm').addEventListener('submit', function(e
   var boardName = document.getElementById('boardName').value;
   var wsid = document.getElementById("createBoardForm").getAttribute("data-workspace-id");
   // Send a POST request to the server to create a new workspace
-  fetch('/dashboards/create/' + wsid, {
+  fetch('/api/dashboards/create/' + wsid, {
     method: 'POST',
     headers: {
       'Content-Type': 'application/json',
@@ -49,13 +49,28 @@ document.getElementById('createBoardForm').addEventListener('submit', function(e
   });
 });
 
-document.addEventListener('DOMContentLoaded', function() {
-  var workspaces = document.querySelectorAll('.board');
+const deleteBtns = document.querySelectorAll('.delete-button');
+deleteBtns.forEach(function(deleteBtn){
+    deleteBtn.addEventListener("click", function() {
+      var id = deleteBtn.getAttribute("data-board-id")
 
-  workspaces.forEach(function(workspace) {
-    workspace.addEventListener('click', function() {
-      var id = workspace.getAttribute('data-board-id');
-      window.location.href = '/dashboards/board/' + id;
+      if (!confirm("Are you sure to remove this board?"))
+        return;
+
+      const url = `/api/dashboards/delete/${id}`;
+      const request = new Request(url, { method: "DELETE" });
+
+      fetch(request)
+        .then(response => {
+          if (response.ok) {
+            location.reload();
+            console.log('workspace removed');
+          } else {
+            // Действия при ошибке удаления
+          }
+        })
+        .catch(error => {
+          // Действия при ошибке запроса
+        });
     });
-  });
 });

@@ -8,7 +8,7 @@ textarea {
     resize: none;
 }
 
-header {
+.title {
   text-align: center;
   margin-top: 20px;
   margin-bottom: 20px;
@@ -36,16 +36,21 @@ h2 {
 }
 
 .card {
+  border: 3px solid;
   margin-bottom: 10px;
   padding: 10px;
   border-radius: 4px;
   background-color: #212121;
-  border-color: #8e8e8e;
+  border-color: transparent;
   transition: background-color 0.3s ease;
+  transition: border-color 0.3s ease;
+  font-size: 25px;
+  font-weight: bold;
 }
 
 .card:hover {
-background-color: #3c738c;
+    background-color: #3d3d3d;
+    border-color: grey;
 }
 
 h3 {
@@ -69,6 +74,7 @@ p {
 
 .add-button {
   padding: 5px 10px;
+  margin-left: 1px;
   border: none;
   border-radius: 4px;
   background-color: #2196f3;
@@ -76,6 +82,7 @@ p {
   font-size: 14px;
   cursor: pointer;
   transition: background-color 0.3s ease;
+  width: 100%;
 }
 
 .add-button:hover {
@@ -231,6 +238,11 @@ select {
   float: right
 }
 
+.back-link {
+    color: #76b3e3;
+    text-decoration: none;
+}
+
 .back-button {
   padding: 5px 10px;
   border: none;
@@ -266,10 +278,97 @@ select {
   background-color: #1976d2;
 }
 
+div .logout {
+    display: flex;
+    justify-content: flex-end;
+    align-items: center;
+    background: #78B7FE;
+    padding: 10px;
+    border-radius: 5px;
+    font-weight: bold;
+}
 
+.logout a {
+    text-decoration: none;
+    color: white;
+    padding: 10px;
+    transition: background 0.3s ease;
+    border-radius: 10px;
+}
 
+.logout a:hover {
+    background: grey;
+}
 
+.menu {
+  position: absolute;
+  background-color: grey;
+  border: 1px solid #686868;
+  padding: 5px;
+  border-radius: 5px;
+}
 
+.menu-item {
+  cursor: pointer;
+  padding: 5px;
+  border-radius: 5px;
+}
 
+.menu-item:hover {
+  background-color: #f0f0f0;
+  color: #1b1b1b;
+}
 
+.participants {
+    display: block;
+    margin: 10px;
+    margin-top: 100px;
+    background: grey;
+    padding: 10px;
+    border-radius: 10px;
+    width:95%;
+}
 
+.participants span {
+    background: #4c4c4c;
+    padding: 5px;
+    border-radius: 5px;
+    display: block;
+    font-weight: bold;
+}
+
+.participants h2 {
+    margin-top: 0px;
+}
+
+.add-user {
+    margin-top: 20px;
+}
+
+.add-user input[type="text"] {
+    border-radius: 5px;
+    background: #3d3d3d;
+    border: none;
+    font-size: 16px;
+    color: white;
+    padding: 5px;
+}
+
+.add-user button {
+    background: #2086ff;
+    color: white;
+    border: none;
+    border-radius: 5px;
+    font-size: 16px;
+    padding: 5px;
+    color: white;
+    transition: background 0.3s ease;
+    margin-left: 10px;
+    padding-left: 20px;
+    padding-right: 20px;
+    font-weight: bold;
+}
+
+.add-user button:hover {
+    background: #1976d2;
+}

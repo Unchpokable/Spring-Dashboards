@@ -19,8 +19,9 @@
         <p></p>
         <div class="dashboards">
             <div th:each="workspace : ${workspaces}" th:attr="data-workspace-id=${workspace.getId()}" class="workspace">
-                <span th:text="${workspace.getName()}"></span>
-                <button class="delete-button">Delete</button>
+<!--                <span th:text="${workspace.getName()}"></span>-->
+                <a class="workspace-link" th:href="@{/workspaces/workspace/{wsId}(wsId=${workspace.getId()})}" th:text="${workspace.getName()}"></a>
+                <button th:attr="data-workspace-id=${workspace.getId()}" class="delete-button">Delete</button>
             </div>
         </div>
     </div>
@@ -28,7 +29,7 @@
     <div class="create_workspace">
         <h2>Create New Workspace</h2>
         <form id="createWorkspaceForm">
-            <input type="text" id="boardName" placeholder="Enter workspace name" required>
+            <input type="text" id="workspaceName" placeholder="Enter workspace name" required>
             <button type="submit">Create</button>
         </form>
     </div>

@@ -13,7 +13,7 @@
     <h1>
         <a th:href="@{/workspaces/{usrId}(usrId=${userId})}" class="back-link">Back to my workspaces</a>
     </h1>
-    <div class="profile">
+    <div class="profile" id="userProfile" th:attr="data-user-id=${userId}">
         <h1>
             <p th:text="${username}"> - Edit Profile</p>
         </h1>
@@ -31,9 +31,14 @@
                 <label for="about">About:</label>
                 <textarea id="about" th:text="${about}"></textarea>
             </div>
-            <button type="submit">Save</button>
+            <button type="submit" id="submitButton" onclick="submitChanges()">Save</button>
         </div>
     </div>
 </div>
+<script src="/static/js/user.js"
+        th:src="@{/js/user.js}">
+
+</script>
+
 </body>
 </html>

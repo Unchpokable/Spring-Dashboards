@@ -6,7 +6,6 @@ body {
     align-items: top-left;
     text-align: top-left;
     margin: 50px;
-    margin-right: 150px;
 }
 
 h1 {
@@ -18,13 +17,11 @@ h1 {
 
 .workspace_container {
     width: 100%;
-    margin-left: 50px;
     margin-top: 100px;
 }
 
 .create_workspace {
     width: 100%;
-    margin-left: 50px;
     margin-top: 100px;
 }
 
@@ -76,6 +73,7 @@ button {
     display: inline-block;
     background-color: #2196f3;
     color: #fff;
+    border: none;
     padding: 10px 20px;
     border-radius: 4px;
     font-size: 16px;
@@ -136,7 +134,7 @@ div .logout {
     display: flex;
     justify-content: flex-end;
     align-items: center;
-    background: #4E9CAF;
+    background: #78B7FE;
     padding: 10px;
     border-radius: 5px;
     font-weight: bold;
@@ -153,6 +151,18 @@ div .logout {
 .logout a:hover {
     background: grey;
 }
+
+.back-link {
+    color: #76b3e3;
+    text-decoration: none;
+}
+
+.workspace-link {
+    font-weight: bold;
+    text-decoration: none;
+    color: white;
+}
+
 
 ul {
     list-style-type: none;
@@ -202,5 +212,10 @@ li span {
 
 .workspace .delete-button {
   margin-left: 10px;
-  padding: 5px;
+  padding: 10px;
+  padding-left: 20px;
+  padding-right: 20px;
+  border: none;
+  border-radius: 5px;
+  font-size: 14px;
 }

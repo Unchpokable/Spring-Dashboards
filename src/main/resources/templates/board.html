@@ -4,35 +4,37 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Task Board</title>
-  <link rel="stylesheet" href="/static/css/dashboard.css" th:href="@{/css/dashbord.css}">
-  <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
+  <link rel="stylesheet" href="/static/css/dashboard.css" th:href="@{/css/dashboard.css}">
+  <link href="https://fonts.googleapis.com/icon?family=Material+Icons" th:href="@{https://fonts.googleapis.com/icon?family=Material+Icons}" rel="stylesheet">
 </head>
 <body>
-<header>
-  <div class="header-left">
-    <form th:action="@{/workspaces/{userId}(userId=${userId})}" method="get">
-      <button type="submit" class="back-button">Back to Workspace</button>
-    </form>
-  </div>
-  <div class="header-right">
-    <form th:action="@{/profile/{userId}(userId=${userId})}" method="get">
-      <button type="submit" class="profile-button">Profile</button>
-    </form>
-    <form th:action="@{/logout}" method="post">
-      <button type="submit" class="logout-button">Logout</button>
-    </form>
-  </div>
 
-  <h1>Task Board</h1>
-</header>
+<div>
+  <div class="logout">
+    <a href="/user/page" th:href="@{/user/profile}" th:text="${username}"></a>
+    <a href="/logout" th:href="@{/logout}">Logout</a>
+  </div>
+</div>
 
-<div class="board" th:attr="data-board-id=${boardId}">
-  <div class="column">
+<h1>
+  <a th:href="@{/workspaces/workspace/{wsId}(wsId=${workspaceId})}" class="back-link">Back to Workspace</a>
+</h1>
+
+<div class="title">
+  <h1>Task Board <span th:text="${boardTitle}"></span></h1>
+</div>
+
+<div class="board" th:attr="data-board-id=${boardId}" id="boardContainer">
+  <div class="column" data-column-type="planned">
     <h2>Planned</h2>
-    <div class="card" th:each="task : ${plannedTasks}" draggable="true" ondragstart="drag(event)">
+    <div class="card" th:each="task : ${plannedTasks}" th:attr="data-card-id=${task.getId()}">
       <h3 th:text="${task.title}">Task 1</h3>
       <p th:text="${task.description}">Lorem ipsum dolor sit amet, consectetur adipiscing elit.</p>
-      <span class="user" th:text="${task.assignedUser}">John Doe</span>
+      <span class="user" th:text="${task.assignedUser.nickname}">John Doe</span>
+      <p></p>
+      <button class="add-button" th:attr="onclick=|deleteCard('${task.getId()}')|">
+        <span class="material-icons">delete</span>
+      </button>
     </div>
     <div class="add-card">
       <button class="add-button" onclick="openModal('planned')">
@@ -41,12 +43,16 @@
     </div>
   </div>
 
-  <div class="column">
+  <div class="column" data-column-type="inProgress">
     <h2>In Progress</h2>
-    <div class="card" th:each="task : ${inProgressTasks}" draggable="true" ondragstart="drag(event)">
+    <div class="card" th:each="task : ${inProgressTasks}" th:attr="data-card-id=${task.getId()}">
       <h3 th:text="${task.title}">Task 3</h3>
       <p th:text="${task.description}">Vivamus sagittis lacus vel augue laoreet rutrum faucibus dolor auctor.</p>
-      <span class="user" th:text="${task.assignedUser}">John Doe</span>
+      <span class="user" th:text="${task.assignedUser.nickname}">John Doe</span>
+      <p></p>
+      <button class="add-button" th:attr="onclick=|deleteCard('${task.getId()}')|">
+        <span class="material-icons">delete</span>
+      </button>
     </div>
     <div class="add-card">
       <button class="add-button" onclick="openModal('inProgress')">
@@ -55,12 +61,16 @@
     </div>
   </div>
 
-  <div class="column">
+  <div class="column" data-column-type="someProblems">
     <h2>Some Problems</h2>
-    <div class="card" th:each="task : ${problemTasks}" draggable="true" ondragstart="drag(event)">
-      <h3 th:text="${task.title}">Task 4</h3>
+    <div class="card" th:each="task : ${problemTasks}" th:attr="data-card-id=${task.getId()}">
+      <h3 th:text="${task.title}" th:attr="data-card-id=${task.getId()}">Task 4</h3>
       <p th:text="${task.description}">Maecenas faucibus mollis interdum.</p>
-      <span class="user" th:text="${task.assignedUser}">Jane Smith</span>
+      <span class="user" th:text="${task.assignedUser.nickname}">Jane Smith</span>
+      <p></p>
+      <button class="add-button" th:attr="onclick=|deleteCard('${task.getId()}')|">
+        <span class="material-icons">delete</span>
+      </button>
     </div>
     <div class="add-card">
       <button class="add-button" onclick="openModal('problem')">
@@ -69,18 +79,37 @@
     </div>
   </div>
 
-  <div class="column">
+  <div class="column" data-column-type="done">
     <h2>Done</h2>
-    <div class="card" th:each="task : ${doneTasks}" draggable="true" ondragstart="drag(event)">
+    <div class="card" th:each="task : ${doneTasks}" th:attr="data-card-id=${task.getId()}">
       <h3 th:text="${task.title}">Task 6</h3>
       <p th:text="${task.description}">Donec id elit non mi porta gravida at eget metus.</p>
-      <span class="user" th:text="${task.assignedUser}">Jane Doe</span>
+      <span class="user" th:text="${task.assignedUser.nickname}">Jane Doe</span>
+      <p></p>
+      <button class="add-button" th:attr="onclick=|deleteCard('${task.getId()}')|">
+        <span class="material-icons">delete</span>
+      </button>
     </div>
     <div class="add-card">
       <button class="add-button" onclick="openModal('done')">
         <span class="material-icons">add</span>
       </button>
     </div>
+  </div>
+</div>
+
+<div class="participants">
+  <h2>Board Owner:</h2>
+  <span th:text="${owner}">Unchpokable</span>
+
+  <p></p>
+  <h2>Participants:</h2>
+
+  <span th:each="user : ${members}" th:attr="data-member-id=${user.getId()}" th:text="${user.nickname}">John Doe</span>
+
+  <div class="add-user">
+    <input type="text" id="inviteNickname" placeholder="Enter user name here" required/>
+    <button type="submit" onclick="addUserToBoard()">Add user</button>
   </div>
 </div>
 
@@ -109,6 +138,6 @@
   </div>
 </div>
 
-<script src="/static/js/addcard.js" th:src="@{/js/addcard.js}"></script>
+<script src="/static/js/cards.js" th:src="@{/js/cards.js}"></script>
 </body>
 </html>
